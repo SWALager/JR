@@ -78,7 +78,15 @@ input::placeholder { opacity:0.6; }
 
 <script>
 // --- FIREBASE ---
-const firebaseConfig = { apiKey:"AIzaSy...", authDomain:"lagersystem-4f0e6.firebaseapp.com", databaseURL:"https://lagersystem-4f0e6-default-rtdb.europe-west1.firebasedatabase.app/" };
+const firebaseConfig = {
+  apiKey: "AIzaSyA4-cqkowey6Qt3a27QJpOhp_dYQmPk4zM",
+  authDomain: "swawebblager.firebaseapp.com",
+  databaseURL: "https://swawebblager-default-rtdb.europe-west1.firebasedatabase.app/",
+  projectId: "swawebblager",
+  storageBucket: "swawebblager.firebasestorage.app",
+  messagingSenderId: "926605353645",
+  appId: "1:926605353645:web:d22566b5cfcef41bf85c24"
+};
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 let products={};
