@@ -270,6 +270,8 @@ body.dark td div {
   <button onclick="toggleTheme()">🌙 Dark Mode</button>
   <button id="toggleFormBtn">➕ Ny produkt</button>
   <button id="exportBtn">💾 Exportera lager som JSON</button>
+  <input type="file" id="fileInput" accept=".csv" style="display:none;">
+<button onclick="document.getElementById('fileInput').click()">📥 Importera Excel</button>
 </div>
 
 <form id="productForm">
@@ -541,6 +543,65 @@ document.getElementById("exportBtn").addEventListener("click", () => {
 });
 
 document.getElementById("search").addEventListener("input",render);
+
+  // IMPORTERA CSV / EXCEL
+document.getElementById("fileInput").addEventListener("change", importCSV);
+
+function importCSV(e){
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(event){
+    const text = event.target.result;
+
+    // dela upp rader
+    const rows = text.split("\n");
+
+    let newProducts = {};
+
+    rows.forEach((row, index) => {
+      // hoppa över header
+      if(index === 0) return;
+
+      // dela via TAB (Excel använder tabbar)
+      const cols = row.split("\t");
+
+      if(cols.length < 4) return;
+
+      let article = (cols[0] || "").trim();
+      let quantity = parseInt(cols[1]) || 0;
+      let location = (cols[2] || "").trim();
+      let status = (cols[3] || "").trim();
+      let picked = parseInt(cols[4]) || 0;
+
+      // ❌ filtrera bort skräp
+      if(!article || article.toLowerCase().includes("tom")) return;
+
+      // skapa unik key
+      const key = Date.now() + Math.random();
+
+      newProducts[key] = {
+        name: "", // du har inget namn i excel
+        article: article,
+        quantity: quantity,
+        location: location,
+        picked: picked,
+        comment: status !== "Tillgänglig" ? status : ""
+      };
+    });
+
+    // slå ihop med befintligt lager
+    products = { ...products, ...newProducts };
+
+    save();
+
+    alert("✅ Import klar!");
+  };
+
+  reader.readAsText(file);
+}
 </script>
 </body>
 </html>
