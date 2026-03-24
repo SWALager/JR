@@ -1,182 +1,236 @@
-```html
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8">
-<title>Lagersaldo</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Lagersaldo</title>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<style>
-body { font-family: Arial; padding:20px; background:#f4f4f4;}
-table{ width:100%; border-collapse:collapse; text-align:center; background:white;}
-th{ background:#008724; color:#fff; padding:10px;}
-td{ padding:7px; border-bottom:1px solid #ccc;}
-button{ padding:6px; margin:2px; cursor:pointer;}
-</style>
+    <style>
+        :root {
+            --bg:#f4f6f8;
+            --card:#fff;
+            --text:#1e293b;
+            --accent:#008724;
+            --border:#e5e7eb;
+            --neon:#fff500;
+        }
+
+        body.dark {
+            --bg:#0f172a;
+            --card:rgba(255,255,255,0.05);
+            --text:#fff;
+            --border:rgba(255,255,255,0.1);
+        }
+
+        body {
+            font-family:"Segoe UI";
+            background:var(--bg);
+            color:var(--text);
+            padding:20px;
+        }
+
+        .container {
+            max-width:1100px;
+            margin:auto;
+            background:var(--card);
+            padding:25px;
+            border-radius:12px;
+            position:relative;
+        }
+
+        table {
+            width:100%;
+            border-collapse:collapse;
+            text-align:center;
+            table-layout:fixed;
+        }
+
+        th {
+            background:var(--accent);
+            color:#fff;
+            padding:10px;
+        }
+
+        td {
+            padding:7px;
+            border-bottom:1px solid var(--border);
+            font-size:15px;
+        }
+
+        td input {
+            font: inherit;
+            color: inherit;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            width: auto;
+            min-width: 40px;
+        }
+
+        .neon {
+            border-radius: 4px;
+            border: 1px solid var(--neon);
+            color: var(--text);
+            background: transparent;
+            box-shadow: 0 0 5px var(--neon),
+                        0 0 10px var(--neon),
+                        0 0 20px var(--neon),
+                        0 0 30px rgba(255, 245, 0, 0.5);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .neon:focus {
+            outline: none;
+            box-shadow: 0 0 8px var(--neon),
+                        0 0 16px var(--neon),
+                        0 0 24px var(--neon),
+                        0 0 40px rgba(255, 245, 0, 0.7);
+        }
+
+        .out-of-stock {
+            background:rgba(255,0,0,0.1);
+        }
+
+        button {
+            padding:6px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            margin:0 2px;
+        }
+
+        .pick-btn { background:#f59e0b; color:#fff; }
+        .delete-btn { background:#ef4444; color:#fff; }
+        .save-btn { background:#22c55e; color:#fff; }
+
+        #search {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            width: 60%;
+            max-width: 400px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #productForm {
+            display: none;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #productForm.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #productForm input {
+            flex: 1 1 150px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        #login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            gap: 15px;
+        }
+    </style>
 </head>
 
 <body>
 
-<h2>Lagersaldo</h2>
+<div class="container" id="login-container">
+    <h2>🔒 Logga in</h2>
+    <input id="login-username" placeholder="Användarnamn"><br><br>
+    <input id="login-password" type="password" placeholder="Lösenord"><br><br>
+    <button onclick="login()">Logga in</button>
+</div>
 
-<button id="exportBtn">💾 Exportera</button>
-<input type="file" id="fileInput" accept=".csv,.txt" style="display:none;">
-<button onclick="document.getElementById('fileInput').click()">📥 Importera Excel</button>
+<div class="container" id="app-container" style="display:none;">
+    <h2>
+        <span id="startTurtle" style="cursor:pointer; font-size:24px;">📦</span>
+        Lagersaldo
+        <a href="mobil.html" class="mobile-link">🐢</a>
+    </h2>
 
-<br><br>
+    <div>
+        <button onclick="toggleTheme()">🌙 Dark Mode</button>
+        <button id="toggleFormBtn">➕ Ny produkt</button>
+        <button id="exportBtn">💾 Exportera lager som JSON</button>
+    </div>
 
-<input id="search" placeholder="Sök...">
+    <form id="productForm">
+        <input id="name" placeholder="Produktnamn" required>
+        <input id="article" placeholder="Artikelnummer" required>
+        <input id="quantity" type="number" placeholder="Antal" required>
+        <input id="location" placeholder="Lagerplats" required>
+        <button>+ Lägg till</button>
+    </form>
 
-<table>
-<thead>
-<tr>
-<th>Namn</th>
-<th>Artikel</th>
-<th>Antal</th>
-<th>Plats</th>
-<th>Plockat</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody id="productList"></tbody>
-</table>
+    <input id="search" placeholder="🔍 Sök...">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Namn</th>
+                <th>Artikel</th>
+                <th>Antal</th>
+                <th>Lagerplats</th>
+                <th>Plockat</th>
+                <th>Status</th>
+                <th>Kommentar</th>
+                <th>Åtgärder</th>
+            </tr>
+        </thead>
+        <tbody id="productList"></tbody>
+    </table>
+</div>
 
 <script>
-// FIREBASE
-const firebaseConfig = {
-  apiKey: "AIzaSyA4-cqkowey6Qt3a27QJpOhp_dYQmPk4zM",
-  authDomain: "swawebblager.firebaseapp.com",
-  databaseURL: "https://swawebblager-default-rtdb.europe-west1.firebasedatabase.app/",
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    // FIREBASE
+    const firebaseConfig = {
+        apiKey: "AIza...",
+        authDomain: "swawebblager.firebaseapp.com"
+    };
 
-let products = {};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-// LOAD
-db.ref("products").on("value", snap=>{
-  products = snap.val() || {};
-  render();
-});
+    function login() {
+        const u = document.getElementById("login-username").value;
+        const p = document.getElementById("login-password").value;
 
-// SAVE
-function save(){
-  db.ref("products").set(products);
-}
-
-// RENDER
-function render(){
-  const list = document.getElementById("productList");
-  const search = document.getElementById("search").value.toLowerCase();
-  list.innerHTML="";
-
-  Object.keys(products).forEach(key=>{
-    const p = products[key];
-
-    if(!(p.article||"").toLowerCase().includes(search) &&
-       !(p.location||"").toLowerCase().includes(search)) return;
-
-    const row=document.createElement("tr");
-
-    row.innerHTML=`
-<td>${p.name||""}</td>
-<td>${p.article}</td>
-<td>${p.quantity}</td>
-<td>${p.location}</td>
-<td>${p.picked||0}</td>
-<td>${p.quantity>0?"Tillgänglig":"Slut"}</td>
-`;
-
-    list.appendChild(row);
-  });
-}
-
-// IMPORT
-document.getElementById("fileInput").addEventListener("change", importCSV);
-
-function importCSV(e){
-  const file = e.target.files[0];
-  if(!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function(event){
-    let text = event.target.result;
-
-    const rows = text.replace(/\r/g, "").split("\n");
-    let newProducts = {};
-
-    rows.forEach((row, index)=>{
-
-      if(index===0 || !row.trim()) return;
-
-      let cols;
-      if(row.includes("\t")){
-        cols = row.split("\t");
-      } else if(row.includes(";")){
-        cols = row.split(";");
-      } else {
-        cols = row.split(",");
-      }
-
-      if(cols.length < 3) return;
-
-      let article = (cols[0]||"").trim();
-      let quantity = parseInt(cols[1])||0;
-      let location = (cols[2]||"").trim();
-      let status = (cols[3]||"").trim();
-      let picked = parseInt(cols[4])||0;
-
-      if(!article || article.toLowerCase().includes("tom")) return;
-
-      // ✅ FIXAD KEY (ingen punkt!)
-      const key = db.ref("products").push().key;
-
-      newProducts[key] = {
-        name:"",
-        article:article,
-        quantity:quantity,
-        location:location,
-        picked:picked,
-        comment: status !== "Tillgänglig" ? status : ""
-      };
-    });
-
-    if(Object.keys(newProducts).length === 0){
-      alert("❌ Fel filformat");
-      return;
+        if (u === "swapos301" && p === "ost") {
+            localStorage.setItem("loggedIn","true");
+            showApp();
+        } else {
+            alert("Fel login");
+        }
     }
 
-    products = { ...products, ...newProducts };
-    save();
-
-    alert("✅ Import klar! ("+Object.keys(newProducts).length+" artiklar)");
-
-    document.getElementById("fileInput").value="";
-  };
-
-  reader.readAsText(file);
-}
-
-// EXPORT
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const dataStr = JSON.stringify(products, null, 2);
-  const blob = new Blob([dataStr], {type: "application/json"});
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "lager.json";
-  a.click();
-
-  URL.revokeObjectURL(url);
-});
-
-document.getElementById("search").addEventListener("input",render);
+    function showApp() {
+        document.getElementById("login-container").style.display="none";
+        document.getElementById("app-container").style.display="block";
+    }
 </script>
 
 </body>
 </html>
-```
