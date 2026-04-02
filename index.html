@@ -463,7 +463,13 @@ function loadProducts(){
 function save(){ db.ref("products").set(products); }
 
 function sortedKeys(){
-  return Object.keys(products).sort((a,b)=> (products[a].location||"").localeCompare(products[b].location||""));
+  return Object.keys(products).sort((a,b)=>
+    (products[a].location || "").localeCompare(
+      (products[b].location || ""),
+      undefined,
+      { numeric: true, sensitivity: "base" }
+      )
+   );
 }
 
 // MODAL LOGIC
