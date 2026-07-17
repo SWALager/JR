@@ -640,18 +640,17 @@ function saveComment(key){
   save();
 }
 
-// SHOW IMAGE MODAL
-function showProductImage(key){
-  const p = products[key];
-  if(!p.image) return;
-
-
 //starkey
   function toggleStar(key){
   products[key].starred = !products[key].starred;
   save();
   render();
 }
+  
+// SHOW IMAGE MODAL
+function showProductImage(key){
+  const p = products[key];
+  if(!p.image) return;
   
   // Skapa modal-overlay
   const imgModal = document.createElement("div");
