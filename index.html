@@ -463,13 +463,22 @@ function loadProducts(){
 function save(){ db.ref("products").set(products); }
 
 function sortedKeys(){
-  return Object.keys(products).sort((a,b)=>
-    (products[a].location || "").localeCompare(
+  return Object.keys(products).sort((a,b)=>{
+    const aStar = products[a].starred ? 1 : 0;
+    const bStar = products[b].starred ? 1 : 0;
+
+    // Stjärnmarkerade först
+    if(aStar !== bStar){
+      return bStar - aStar;
+    }
+
+    // Sedan vanlig sortering på lagerplats
+    return (products[a].location || "").localeCompare(
       (products[b].location || ""),
       undefined,
       { numeric: true, sensitivity: "base" }
-      )
-   );
+    );
+  });
 }
 
 // MODAL LOGIC
@@ -516,6 +525,7 @@ const onlyOutOfStock = filterOutOfStockActive;
   sortedKeys().forEach(key=>{
     const p=products[key];
     if(!p.picked)p.picked=0;
+    if(p.starred === undefined) p.starred = false;
 
     const status=p.quantity>0?"Tillgänglig":"Slut";
     if(!(p.name||"").toLowerCase().includes(search) &&
@@ -556,7 +566,12 @@ if(onlyOutOfStock && p.quantity > 0) return;
 <td>
   ${
     editing
-    ? `<button class="save-btn" onclick="saveEdit('${key}')">Uppdatera</button>`
+? `
+<button class="save-btn" onclick="saveEdit('${key}')">Uppdatera</button>
+<button onclick="toggleStar('${key}')">
+${p.starred ? "⭐" : "☆"}
+</button>
+`
     : `
       <button onclick="edit('${key}')">✏️</button>
       <button class="pick-btn" onclick="pick('${key}')">Plocka</button>
@@ -630,6 +645,14 @@ function showProductImage(key){
   const p = products[key];
   if(!p.image) return;
 
+
+//starkey
+  function toggleStar(key){
+  products[key].starred = !products[key].starred;
+  save();
+  render();
+}
+  
   // Skapa modal-overlay
   const imgModal = document.createElement("div");
   imgModal.style.position="fixed";
@@ -690,15 +713,16 @@ productForm.addEventListener("submit",e=>{
   const locationInput = document.getElementById("location");
 
   const key = Date.now();
-  products[key] = {
+products[key] = {
     name: nameInput.value || "",
     article: articleInput.value || "",
     quantity: parseInt(quantityInput.value) || 0,
     location: locationInput.value || "",
     picked: 0,
     comment: "",
-    image: "" // ingen bild på pc
-  };
+    image: "",
+    starred: false
+};
 
   save();
   e.target.reset();
