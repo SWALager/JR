@@ -465,7 +465,7 @@ startBtn.addEventListener('click', () => {
 
 let turtleX;
 let turtleY;
-let turtleAngle = 180; // 180° = vänster
+let turtleAngle = 0; // 180° = vänster
 
 const moveSpeed = 3;
 const turnSpeed = 3;
@@ -515,32 +515,30 @@ document.addEventListener("keyup", e => {
 // Spelloopen
 function gameLoop(){
 
-    if(keys.ArrowLeft)
+    // Sväng
+    if(keys.ArrowUp)
         turtleAngle -= turnSpeed;
 
-    if(keys.ArrowRight)
+    if(keys.ArrowDown)
         turtleAngle += turnSpeed;
 
     const rad = turtleAngle * Math.PI / 180;
 
-    if(keys.ArrowUp){
-
+    // Kör framåt
+    if(keys.ArrowLeft){
         turtleX += Math.cos(rad) * moveSpeed;
         turtleY += Math.sin(rad) * moveSpeed;
-
     }
 
-    if(keys.ArrowDown){
-
+    // Backa
+    if(keys.ArrowRight){
         turtleX -= Math.cos(rad) * moveSpeed;
         turtleY -= Math.sin(rad) * moveSpeed;
-
     }
 
     updateTurtle();
 
     requestAnimationFrame(gameLoop);
-
 }
 // DATA
 let products={}, editingKey=null, activeComment=null;
