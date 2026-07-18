@@ -459,82 +459,37 @@ startBtn.addEventListener('click', () => {
   turtle.classList.add('animate');
 });
 
-// ==========================
-// SKÖLDPADDA 360°
-// ==========================
-
-let turtleX;
-let turtleY;
-let turtleAngle = 0; // 180° = vänster
-
-const moveSpeed = 3;
-const turnSpeed = 3;
-
-const keys = {};
-
-function initTurtlePosition() {
-
-    const container = document.querySelector(".container");
-
-    turtleX = container.offsetWidth * 0.95;
-    turtleY = 175;
-
-    updateTurtle();
-}
-
-window.addEventListener("load", () => {
-    initTurtlePosition();
-    gameLoop();
-});
-
-function updateTurtle() {
-
-    turtle.style.left = turtleX + "px";
-    turtle.style.top = turtleY + "px";
-
-    turtle.style.transform =
-        `translate(-50%, -50%) rotate(${turtleAngle}deg)`;
-}
-
-// Håll reda på vilka tangenter som är nedtryckta
-document.addEventListener("keydown", e => {
-
-    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)){
-        keys[e.key] = true;
-        e.preventDefault();
-    }
-
-});
-
-document.addEventListener("keyup", e => {
-
-    keys[e.key] = false;
-
-});
-
-// Spelloopen
 function gameLoop(){
 
-    // Rotera
-    if(keys.ArrowDown)
+    // Rotera medurs
+    if(keys.ArrowUp)
         turtleAngle += turnSpeed;
 
-    if(keys.ArrowUp)
+    // Rotera moturs
+    if(keys.ArrowDown)
         turtleAngle -= turnSpeed;
+
 
     const rad = turtleAngle * Math.PI / 180;
 
-    // Framåt
-    if(keys.ArrowRight){
+
+    // Gas framåt
+    if(keys.ArrowLeft){
+
         turtleX += Math.cos(rad) * moveSpeed;
         turtleY += Math.sin(rad) * moveSpeed;
+
     }
 
-    // Bakåt
-    if(keys.ArrowLeft){
+
+    // Backa
+    if(keys.ArrowRight){
+
         turtleX -= Math.cos(rad) * moveSpeed;
         turtleY -= Math.sin(rad) * moveSpeed;
+
     }
+
 
     updateTurtle();
 
