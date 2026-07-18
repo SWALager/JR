@@ -457,18 +457,20 @@ startBtn.addEventListener('click', () => {
 
 // STYR SKÖLDPADDAN MED PILTANGENTER
 
+// STYR SKÖLDPADDAN MED PILTANGENTER
+
 let turtleX;
 let turtleY;
 const turtleSpeed = 10;
 
-// Hämta faktisk startposition när sidan är färdigritad
+// Startposition (samma som i CSS)
 function initTurtlePosition() {
-  const rect = turtle.getBoundingClientRect();
+  const container = document.querySelector(".container");
+  const containerRect = container.getBoundingClientRect();
 
-  turtleX = rect.left + window.scrollX;
-  turtleY = rect.top + window.scrollY;
+  turtleX = container.offsetWidth * 0.95; // 95% från vänster i containern
+  turtleY = 175;                          // 175 px ner
 
-  // Byt från procent till pixelposition
   turtle.style.left = turtleX + "px";
   turtle.style.top = turtleY + "px";
 }
