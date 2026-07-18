@@ -521,22 +521,22 @@ function gameLoop(){
     let rad = turtleAngle * Math.PI / 180;
 
 
-    // gasa framåt
-    if(keys.ArrowLeft){
+// ⬅️ Vänster = gas framåt
+if(keys.ArrowLeft){
 
-        turtleX += Math.cos(rad) * moveSpeed;
-        turtleY += Math.sin(rad) * moveSpeed;
+    turtleX -= Math.cos(rad) * moveSpeed;
+    turtleY -= Math.sin(rad) * moveSpeed;
 
-    }
+}
 
 
-    // backa
-    if(keys.ArrowRight){
+// ➡️ Höger = backa
+if(keys.ArrowRight){
 
-        turtleX -= Math.cos(rad) * moveSpeed;
-        turtleY -= Math.sin(rad) * moveSpeed;
+    turtleX += Math.cos(rad) * moveSpeed;
+    turtleY += Math.sin(rad) * moveSpeed;
 
-    }
+}
 
 
     updateTurtle();
