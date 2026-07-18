@@ -444,32 +444,26 @@ toggleBtn.addEventListener("click", () => {
   }
 });
 
-// SKÖLDPADDA ANIMATION TRIGGER
-const turtle = document.querySelector('.mobile-link');
-const startBtn = document.getElementById('startTurtle');
+// STYR SKÖLDPADDAN MED PILTANGENTER
+let turtleX = 95;
+let turtleY = 175;
+const turtleSpeed = 10;
 
-startBtn.addEventListener('click', () => {
-  turtle.classList.remove('animate'); 
-  void turtle.offsetWidth;
-  turtle.classList.add('animate');
-});
-
-let facingRight = false;
+turtle.style.left = turtleX + "%";
+turtle.style.top = turtleY + "px";
 
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowLeft":
-      turtleX -= turtleSpeed;
-      facingRight = false;
+      turtleX = Math.max(0, turtleX - 1);
       break;
 
     case "ArrowRight":
-      turtleX += turtleSpeed;
-      facingRight = true;
+      turtleX = Math.min(98, turtleX + 1);
       break;
 
     case "ArrowUp":
-      turtleY -= turtleSpeed;
+      turtleY = Math.max(0, turtleY - turtleSpeed);
       break;
 
     case "ArrowDown":
@@ -480,8 +474,9 @@ document.addEventListener("keydown", (e) => {
       return;
   }
 
-  turtle.style.transform = facingRight ? "scaleX(-1)" : "scaleX(1)";
-  turtle.style.left = turtleX + "px";
+  e.preventDefault();
+
+  turtle.style.left = turtleX + "%";
   turtle.style.top = turtleY + "px";
 });
 // DATA
