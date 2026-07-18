@@ -470,6 +470,7 @@ document.addEventListener("keydown", (e) => {
 
     case "ArrowRight":
       turtleX = Math.min(98, turtleX + 1);
+      turtle.style.transform = "scaleX(-1)";
       break;
 
     case "ArrowUp":
