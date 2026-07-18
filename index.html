@@ -240,6 +240,7 @@ body.dark td div {
   font-size: 24px;
   text-decoration: none;
   z-index: 1000;
+  transition: transform 0.15s ease;
 }
 
 .mobile-link.animate {
@@ -462,39 +463,49 @@ startBtn.addEventListener('click', () => {
 let turtleX;
 let turtleY;
 const turtleSpeed = 10;
+let facingRight = false;
 
 // Startposition (samma som i CSS)
 function initTurtlePosition() {
   const container = document.querySelector(".container");
-  const containerRect = container.getBoundingClientRect();
 
-  turtleX = container.offsetWidth * 0.95; // 95% från vänster i containern
+  turtleX = container.offsetWidth * 0.95; // 95% från vänster
   turtleY = 175;                          // 175 px ner
 
   turtle.style.left = turtleX + "px";
   turtle.style.top = turtleY + "px";
+  turtle.style.transform = "rotate(0deg) scaleX(1)";
 }
 
 window.addEventListener("load", initTurtlePosition);
 
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
+
     case "ArrowLeft":
       turtleX -= turtleSpeed;
-      turtle.style.transform = "scaleX(1)";
+      facingRight = false;
+      turtle.style.transform = "rotate(0deg) scaleX(1)";
       break;
 
     case "ArrowRight":
       turtleX += turtleSpeed;
-      turtle.style.transform = "scaleX(-1)";
+      facingRight = true;
+      turtle.style.transform = "rotate(0deg) scaleX(-1)";
       break;
 
     case "ArrowUp":
       turtleY -= turtleSpeed;
+      turtle.style.transform = facingRight
+        ? "rotate(-90deg) scaleX(-1)"
+        : "rotate(-90deg) scaleX(1)";
       break;
 
     case "ArrowDown":
       turtleY += turtleSpeed;
+      turtle.style.transform = facingRight
+        ? "rotate(90deg) scaleX(-1)"
+        : "rotate(90deg) scaleX(1)";
       break;
 
     default:
@@ -506,7 +517,6 @@ document.addEventListener("keydown", (e) => {
   turtle.style.left = turtleX + "px";
   turtle.style.top = turtleY + "px";
 });
-
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
