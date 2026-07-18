@@ -235,11 +235,12 @@ body.dark td div {
   
 .mobile-link {
   position: absolute;
+  top: 175px;
+  left: 95%;
   font-size: 24px;
   text-decoration: none;
   z-index: 1000;
 }
-
 
 .mobile-link.animate {
   animation: turtle-move 5s linear forwards;
@@ -329,9 +330,9 @@ body.dark td div {
 </div>
 
 <div class="container" id="app-container" style="display:none;">
-<a href="mobil.html" class="mobile-link" title="Mobilversion">🐢</a>
-<h2>  <span id="startTurtle" style="cursor:pointer; font-size:24px;">📦</span>Lagersaldo</h2>
-
+<h2>  <span id="startTurtle" style="cursor:pointer; font-size:24px;">📦</span>Lagersaldo
+  <a href="mobil.html" class="mobile-link" title="Mobilversion">🐢</a>
+</h2>
 
 <div style="margin-bottom:10px;">
   <button onclick="toggleTheme()">🌙 Dark Mode</button>
