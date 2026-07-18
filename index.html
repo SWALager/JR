@@ -454,18 +454,27 @@ startBtn.addEventListener('click', () => {
   turtle.classList.add('animate');
 });
 
-let turtleX = null;
-let turtleY = null;
+// STYR SKÖLDPADDAN MED PILTANGENTER
+
+let turtleX;
+let turtleY;
 const turtleSpeed = 10;
 
+// Hämta faktisk startposition när sidan är färdigritad
+function initTurtlePosition() {
+  const rect = turtle.getBoundingClientRect();
+
+  turtleX = rect.left + window.scrollX;
+  turtleY = rect.top + window.scrollY;
+
+  // Byt från procent till pixelposition
+  turtle.style.left = turtleX + "px";
+  turtle.style.top = turtleY + "px";
+}
+
+window.addEventListener("load", initTurtlePosition);
+
 document.addEventListener("keydown", (e) => {
-
-  // Hämta den verkliga positionen första gången
-  if (turtleX === null || turtleY === null) {
-    turtleX = parseFloat(getComputedStyle(turtle).left);
-    turtleY = parseFloat(getComputedStyle(turtle).top);
-  }
-
   switch (e.key) {
     case "ArrowLeft":
       turtleX -= turtleSpeed;
@@ -494,6 +503,37 @@ document.addEventListener("keydown", (e) => {
   turtle.style.left = turtleX + "px";
   turtle.style.top = turtleY + "px";
 });
+
+// DATA
+let products={}, editingKey=null, activeComment=null;
+
+function loadProducts(){
+  db.ref("products").on("value", snap=>{
+    products=snap.val()||{};
+    render();
+  });
+}
+
+function save(){ db.ref("products").set(products); }
+
+function sortedKeys(){
+  return Object.keys(products).sort((a,b)=>{
+    const aStar = products[a].starred ? 1 : 0;
+    const bStar = products[b].starred ? 1 : 0;
+
+    // Stjärnmarkerade först
+    if(aStar !== bStar){
+      return bStar - aStar;
+    }
+
+    // Sedan vanlig sortering på lagerplats
+    return (products[a].location || "").localeCompare(
+      (products[b].location || ""),
+      undefined,
+      { numeric: true, sensitivity: "base" }
+    );
+  });
+}
 
 // MODAL LOGIC
 let modalResolve = null;
