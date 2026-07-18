@@ -455,9 +455,25 @@ startBtn.addEventListener('click', () => {
 });
 
 // STYR SKÖLDPADDAN MED PILTANGENTER
-let turtleX = turtle.offsetLeft;
-let turtleY = turtle.offsetTop;
+const turtle = document.querySelector('.mobile-link');
+
+let turtleX;
+let turtleY;
 const turtleSpeed = 10;
+
+// Hämta faktisk startposition när sidan är färdigritad
+function initTurtlePosition() {
+  const rect = turtle.getBoundingClientRect();
+
+  turtleX = rect.left + window.scrollX;
+  turtleY = rect.top + window.scrollY;
+
+  // Byt från procent till pixelposition
+  turtle.style.left = turtleX + "px";
+  turtle.style.top = turtleY + "px";
+}
+
+window.addEventListener("load", initTurtlePosition);
 
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
@@ -488,7 +504,6 @@ document.addEventListener("keydown", (e) => {
   turtle.style.left = turtleX + "px";
   turtle.style.top = turtleY + "px";
 });
-
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
