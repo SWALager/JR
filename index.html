@@ -493,9 +493,20 @@ function updateTurtle(){
     turtle.style.left = turtleX + "px";
     turtle.style.top = turtleY + "px";
 
-    // rotation medurs
-    turtle.style.transform = 
-        `rotate(${turtleAngle}deg)`;
+
+    if(isReversing){
+
+        // Spegelvänd + behåll rätt rotationskänsla
+        turtle.style.transform =
+            `rotate(${turtleAngle + 180}deg) scaleX(-1)`;
+
+    } else {
+
+        turtle.style.transform =
+            `rotate(${turtleAngle}deg) scaleX(1)`;
+
+    }
+
 }
 
 
@@ -524,6 +535,8 @@ function gameLoop(){
 // ⬅️ Vänster = gas framåt
 if(keys.ArrowLeft){
 
+    isReversing = false;
+
     turtleX -= Math.cos(rad) * moveSpeed;
     turtleY -= Math.sin(rad) * moveSpeed;
 
@@ -532,6 +545,8 @@ if(keys.ArrowLeft){
 
 // ➡️ Höger = backa
 if(keys.ArrowRight){
+
+    isReversing = true;
 
     turtleX += Math.cos(rad) * moveSpeed;
     turtleY += Math.sin(rad) * moveSpeed;
