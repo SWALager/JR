@@ -454,8 +454,9 @@ startBtn.addEventListener('click', () => {
   turtle.classList.add('animate');
 });
 
- // STYR SKÖLDPADDAN MED PILTANGENTER
-
+// STYR SKÖLDPADDAN MED PILTANGENTER
+let turtleX = turtle.offsetLeft;
+let turtleY = turtle.offsetTop;
 const turtleSpeed = 10;
 
 document.addEventListener("keydown", (e) => {
