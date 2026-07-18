@@ -516,22 +516,22 @@ document.addEventListener("keyup", e => {
 function gameLoop(){
 
     // Rotera
-    if(keys.ArrowUp)
+    if(keys.ArrowDown)
         turtleAngle += turnSpeed;
 
-    if(keys.ArrowDown)
+    if(keys.ArrowUp)
         turtleAngle -= turnSpeed;
 
     const rad = turtleAngle * Math.PI / 180;
 
     // Framåt
-    if(keys.ArrowLeft){
+    if(keys.ArrowRight){
         turtleX += Math.cos(rad) * moveSpeed;
         turtleY += Math.sin(rad) * moveSpeed;
     }
 
     // Bakåt
-    if(keys.ArrowRight){
+    if(keys.ArrowLeft){
         turtleX -= Math.cos(rad) * moveSpeed;
         turtleY -= Math.sin(rad) * moveSpeed;
     }
