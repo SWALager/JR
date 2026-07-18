@@ -515,22 +515,22 @@ document.addEventListener("keyup", e => {
 // Spelloopen
 function gameLoop(){
 
-    // Sväng
+    // Rotera
     if(keys.ArrowUp)
-        turtleAngle -= turnSpeed;
+        turtleAngle += turnSpeed;
 
     if(keys.ArrowDown)
-        turtleAngle += turnSpeed;
+        turtleAngle -= turnSpeed;
 
     const rad = turtleAngle * Math.PI / 180;
 
-    // Kör framåt
+    // Framåt
     if(keys.ArrowLeft){
         turtleX += Math.cos(rad) * moveSpeed;
         turtleY += Math.sin(rad) * moveSpeed;
     }
 
-    // Backa
+    // Bakåt
     if(keys.ArrowRight){
         turtleX -= Math.cos(rad) * moveSpeed;
         turtleY -= Math.sin(rad) * moveSpeed;
