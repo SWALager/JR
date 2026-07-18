@@ -444,40 +444,16 @@ toggleBtn.addEventListener("click", () => {
   }
 });
 
-// STYR SKÖLDPADDAN MED PILTANGENTER
-let turtleX = turtle.offsetLeft;
-let turtleY = turtle.offsetTop;
-const turtleSpeed = 10;
+// SKÖLDPADDA ANIMATION TRIGGER
+const turtle = document.querySelector('.mobile-link');
+const startBtn = document.getElementById('startTurtle');
 
-document.addEventListener("keydown", (e) => {
-  switch (e.key) {
-    case "ArrowLeft":
-      turtleX -= turtleSpeed;
-      turtle.style.transform = "scaleX(1)";
-      break;
-
-    case "ArrowRight":
-      turtleX += turtleSpeed;
-      turtle.style.transform = "scaleX(-1)";
-      break;
-
-    case "ArrowUp":
-      turtleY -= turtleSpeed;
-      break;
-
-    case "ArrowDown":
-      turtleY += turtleSpeed;
-      break;
-
-    default:
-      return;
-  }
-
-  e.preventDefault();
-
-  turtle.style.left = turtleX + "px";
-  turtle.style.top = turtleY + "px";
+startBtn.addEventListener('click', () => {
+  turtle.classList.remove('animate'); 
+  void turtle.offsetWidth;
+  turtle.classList.add('animate');
 });
+
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
