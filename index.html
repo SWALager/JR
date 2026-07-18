@@ -235,12 +235,11 @@ body.dark td div {
   
 .mobile-link {
   position: absolute;
-  top: 175px;
-  left: 95%;
   font-size: 24px;
   text-decoration: none;
   z-index: 1000;
 }
+
 
 .mobile-link.animate {
   animation: turtle-move 5s linear forwards;
@@ -504,6 +503,22 @@ document.addEventListener("keydown", (e) => {
   turtle.style.left = turtleX + "px";
   turtle.style.top = turtleY + "px";
 });
+
+  // Hämta sköldpaddan
+const turtle = document.querySelector('.mobile-link');
+
+// Funktion för att sätta startpositionen
+function initTurtle() {
+  turtle.style.top = "175px";
+  // Vi använder tillfälligt offsetWidth för att räkna ut 95% i pixlar 
+  // så att dina piltangenter (som förmodligen plussar/minussar pixlar) fungerar direkt.
+  const containerWidth = document.getElementById('app-container').offsetWidth || window.innerWidth;
+  turtle.style.left = (containerWidth * 0.95) + "px";
+}
+
+// Kör funktionen när sidan laddats (eller anropa den inuti din inloggningsfunktion)
+window.addEventListener('DOMContentLoaded', initTurtle);
+
 
 // DATA
 let products={}, editingKey=null, activeComment=null;
