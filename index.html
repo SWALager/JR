@@ -494,19 +494,19 @@ document.addEventListener("keydown", (e) => {
       turtle.style.transform = "rotate(0deg) scaleX(-1)";
       break;
 
-    case "ArrowUp":
-      turtleY -= turtleSpeed;
-      turtle.style.transform = facingRight
-        ? "rotate(-90deg) scaleX(-1)"
-        : "rotate(-90deg) scaleX(1)";
-      break;
+  case "ArrowUp":
+  turtleY -= turtleSpeed;
+  turtle.style.transform = facingRight
+    ? "rotate(-90deg) scaleX(-1)"
+    : "rotate(90deg) scaleX(1)";
+  break;
 
-    case "ArrowDown":
-      turtleY += turtleSpeed;
-      turtle.style.transform = facingRight
-        ? "rotate(90deg) scaleX(-1)"
-        : "rotate(90deg) scaleX(1)";
-      break;
+case "ArrowDown":
+  turtleY += turtleSpeed;
+  turtle.style.transform = facingRight
+    ? "rotate(90deg) scaleX(-1)"
+    : "rotate(-90deg) scaleX(1)";
+  break;
 
     default:
       return;
