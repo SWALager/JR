@@ -233,14 +233,17 @@ body.dark td div {
 
 /* SKÖLDPADDA ANIMATION */
   
-.mobile-link {
-  position: absolute;
-  top: 175px;
-  left: 95%;
-  font-size: 24px;
-  text-decoration: none;
-  z-index: 1000;
-  transition: transform 0.15s ease;
+.mobile-link{
+    position:absolute;
+    top:175px;
+    left:95%;
+
+    font-size:24px;
+    text-decoration:none;
+    z-index:1000;
+
+    transform-origin:center center;
+    user-select:none;
 }
 
 .mobile-link.animate {
@@ -462,11 +465,12 @@ startBtn.addEventListener('click', () => {
 
 let turtleX;
 let turtleY;
+let turtleAngle = 180; // 180° = vänster
 
-const turtleSpeed = 8;
-const turnSpeed = 15; // grader per knapptryck
+const moveSpeed = 3;
+const turnSpeed = 3;
 
-let turtleAngle = 180; // startar åt vänster
+const keys = {};
 
 function initTurtlePosition() {
 
@@ -478,49 +482,66 @@ function initTurtlePosition() {
     updateTurtle();
 }
 
-window.addEventListener("load", initTurtlePosition);
+window.addEventListener("load", () => {
+    initTurtlePosition();
+    gameLoop();
+});
 
 function updateTurtle() {
 
     turtle.style.left = turtleX + "px";
     turtle.style.top = turtleY + "px";
-    turtle.style.transform = `rotate(${turtleAngle}deg)`;
+
+    turtle.style.transform =
+        `translate(-50%, -50%) rotate(${turtleAngle}deg)`;
 }
 
-document.addEventListener("keydown", (e) => {
+// Håll reda på vilka tangenter som är nedtryckta
+document.addEventListener("keydown", e => {
 
-    switch (e.key) {
-
-        case "ArrowLeft":
-            turtleAngle -= turnSpeed;
-            break;
-
-        case "ArrowRight":
-            turtleAngle += turnSpeed;
-            break;
-
-        case "ArrowUp":
-
-            turtleX += Math.cos(turtleAngle * Math.PI / 180) * turtleSpeed;
-            turtleY += Math.sin(turtleAngle * Math.PI / 180) * turtleSpeed;
-
-            break;
-
-        case "ArrowDown":
-
-            turtleX -= Math.cos(turtleAngle * Math.PI / 180) * turtleSpeed;
-            turtleY -= Math.sin(turtleAngle * Math.PI / 180) * turtleSpeed;
-
-            break;
-
-        default:
-            return;
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)){
+        keys[e.key] = true;
+        e.preventDefault();
     }
 
-    e.preventDefault();
-    updateTurtle();
+});
+
+document.addEventListener("keyup", e => {
+
+    keys[e.key] = false;
 
 });
+
+// Spelloopen
+function gameLoop(){
+
+    if(keys.ArrowLeft)
+        turtleAngle -= turnSpeed;
+
+    if(keys.ArrowRight)
+        turtleAngle += turnSpeed;
+
+    const rad = turtleAngle * Math.PI / 180;
+
+    if(keys.ArrowUp){
+
+        turtleX += Math.cos(rad) * moveSpeed;
+        turtleY += Math.sin(rad) * moveSpeed;
+
+    }
+
+    if(keys.ArrowDown){
+
+        turtleX -= Math.cos(rad) * moveSpeed;
+        turtleY -= Math.sin(rad) * moveSpeed;
+
+    }
+
+    updateTurtle();
+
+    requestAnimationFrame(gameLoop);
+
+}
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
