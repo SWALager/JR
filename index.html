@@ -454,6 +454,37 @@ startBtn.addEventListener('click', () => {
   turtle.classList.add('animate');
 });
 
+  let facingRight = false;
+
+document.addEventListener("keydown", (e) => {
+  switch (e.key) {
+    case "ArrowLeft":
+      turtleX -= turtleSpeed;
+      facingRight = false;
+      break;
+
+    case "ArrowRight":
+      turtleX += turtleSpeed;
+      facingRight = true;
+      break;
+
+    case "ArrowUp":
+      turtleY -= turtleSpeed;
+      break;
+
+    case "ArrowDown":
+      turtleY += turtleSpeed;
+      break;
+
+    default:
+      return;
+  }
+
+  turtle.style.transform = facingRight ? "scaleX(-1)" : "scaleX(1)";
+  turtle.style.left = turtleX + "px";
+  turtle.style.top = turtleY + "px";
+});
+
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
