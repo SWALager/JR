@@ -455,26 +455,18 @@ startBtn.addEventListener('click', () => {
 });
 
 // STYR SKÖLDPADDAN MED PILTANGENTER
-
-let turtleX;
-let turtleY;
+let turtleX = null;
+let turtleY = null;
 const turtleSpeed = 10;
 
-// Hämta faktisk startposition när sidan är färdigritad
-function initTurtlePosition() {
-  const rect = turtle.getBoundingClientRect();
-
-  turtleX = rect.left + window.scrollX;
-  turtleY = rect.top + window.scrollY;
-
-  // Byt från procent till pixelposition
-  turtle.style.left = turtleX + "px";
-  turtle.style.top = turtleY + "px";
-}
-
-window.addEventListener("load", initTurtlePosition);
-
 document.addEventListener("keydown", (e) => {
+
+  // Hämta position första gången en pil trycks
+  if (turtleX === null || turtleY === null) {
+    turtleX = turtle.offsetLeft;
+    turtleY = turtle.offsetTop;
+  }
+
   switch (e.key) {
     case "ArrowLeft":
       turtleX -= turtleSpeed;
