@@ -457,6 +457,7 @@ let turtleX = 0;
 let turtleY = 175;
 
 let turtleAngle = 0; // pekar åt vänster från start
+  let isReversing = false;
 
 const moveSpeed = 2;
 const turnSpeed = 2;
@@ -493,12 +494,10 @@ function updateTurtle(){
     turtle.style.left = turtleX + "px";
     turtle.style.top = turtleY + "px";
 
-
     if(isReversing){
 
-        // Spegelvänd + behåll rätt rotationskänsla
         turtle.style.transform =
-            `rotate(${turtleAngle + 180}deg) scaleX(-1)`;
+            `rotate(${turtleAngle}deg) scaleX(-1)`;
 
     } else {
 
@@ -543,7 +542,6 @@ if(keys.ArrowLeft){
 }
 
 
-// ➡️ Höger = backa
 if(keys.ArrowRight){
 
     isReversing = true;
