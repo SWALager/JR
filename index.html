@@ -454,6 +454,34 @@ startBtn.addEventListener('click', () => {
   turtle.classList.add('animate');
 });
 
+  // STYR SKÖLDPADDAN MED PILTANGENTER
+let turtleX = turtle.offsetLeft;
+let turtleY = turtle.offsetTop;
+const turtleSpeed = 10;
+
+document.addEventListener("keydown", (e) => {
+  switch (e.key) {
+    case "ArrowLeft":
+      turtleX -= turtleSpeed;
+      break;
+    case "ArrowRight":
+      turtleX += turtleSpeed;
+      break;
+    case "ArrowUp":
+      turtleY -= turtleSpeed;
+      break;
+    case "ArrowDown":
+      turtleY += turtleSpeed;
+      break;
+    default:
+      return;
+  }
+
+  e.preventDefault();
+  turtle.style.left = turtleX + "px";
+  turtle.style.top = turtleY + "px";
+});
+
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
