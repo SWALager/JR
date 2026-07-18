@@ -233,17 +233,14 @@ body.dark td div {
 
 /* SKÖLDPADDA ANIMATION */
   
-.mobile-link{
-    position:absolute;
-    top:175px;
-    left:95%;
-
-    font-size:24px;
-    text-decoration:none;
-    z-index:1000;
-
-    transform-origin:center center;
-    user-select:none;
+.mobile-link {
+  position: absolute;
+  top: 175px;
+  left: 95%;
+  font-size: 24px;
+  text-decoration: none;
+  z-index: 1000;
+  transition: transform 0.15s ease;
 }
 
 .mobile-link.animate {
@@ -449,31 +446,82 @@ toggleBtn.addEventListener("click", () => {
   }
 });
 
-// SKÖLDPADDA ANIMATION TRIGGER
+// ==========================
+// SKÖLDPADDA PILTANGENTER
+// ==========================
+
 const turtle = document.querySelector('.mobile-link');
 const startBtn = document.getElementById('startTurtle');
 
-startBtn.addEventListener('click', () => {
-  turtle.classList.remove('animate'); 
-  void turtle.offsetWidth;
-  turtle.classList.add('animate');
+let turtleX = 0;
+let turtleY = 175;
+
+let turtleAngle = 180; // pekar åt vänster från start
+
+const moveSpeed = 4;
+const turnSpeed = 4;
+
+let keys = {};
+
+window.addEventListener("keydown", e => {
+    keys[e.key] = true;
+
+    if(
+        ["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)
+    ){
+        e.preventDefault();
+    }
 });
+
+window.addEventListener("keyup", e => {
+    keys[e.key] = false;
+});
+
+
+function initTurtle(){
+
+    const container = document.querySelector(".container");
+
+    turtleX = container.offsetWidth * 0.95;
+
+    updateTurtle();
+}
+
+
+function updateTurtle(){
+
+    turtle.style.left = turtleX + "px";
+    turtle.style.top = turtleY + "px";
+
+    // rotation medurs
+    turtle.style.transform = 
+        `rotate(${turtleAngle}deg)`;
+}
+
+
+// Vänster = gasa
+// Höger = backa
+// Upp = rotera medurs
+// Ner = rotera moturs
 
 function gameLoop(){
 
-    // Rotera medurs
-    if(keys.ArrowUp)
+    // rotera medurs
+    if(keys.ArrowUp){
         turtleAngle += turnSpeed;
+    }
 
-    // Rotera moturs
-    if(keys.ArrowDown)
+
+    // rotera moturs
+    if(keys.ArrowDown){
         turtleAngle -= turnSpeed;
+    }
 
 
-    const rad = turtleAngle * Math.PI / 180;
+    let rad = turtleAngle * Math.PI / 180;
 
 
-    // Gas framåt
+    // gasa framåt
     if(keys.ArrowLeft){
 
         turtleX += Math.cos(rad) * moveSpeed;
@@ -482,7 +530,7 @@ function gameLoop(){
     }
 
 
-    // Backa
+    // backa
     if(keys.ArrowRight){
 
         turtleX -= Math.cos(rad) * moveSpeed;
@@ -495,6 +543,12 @@ function gameLoop(){
 
     requestAnimationFrame(gameLoop);
 }
+
+
+window.addEventListener("load", () => {
+    initTurtle();
+    gameLoop();
+});
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
