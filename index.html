@@ -466,6 +466,7 @@ document.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowLeft":
       turtleX = Math.max(0, turtleX - 1);
+      facingRight = false;
       break;
 
     case "ArrowRight":
