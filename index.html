@@ -456,64 +456,61 @@ startBtn.addEventListener('click', () => {
   turtle.classList.add('animate');
 });
 
-// STYR SKÖLDPADDAN MED PILTANGENTER
-
 // ==========================
-// SKÖLDPADDA MED RIKTIGA LOOPAR
+// SKÖLDPADDA 360°
 // ==========================
 
 let turtleX;
 let turtleY;
-const turtleSpeed = 10;
 
-let turtleAngle = 0;
+const turtleSpeed = 8;
+const turnSpeed = 15; // grader per knapptryck
 
-// startposition
-function initTurtlePosition(){
+let turtleAngle = 180; // startar åt vänster
+
+function initTurtlePosition() {
 
     const container = document.querySelector(".container");
 
     turtleX = container.offsetWidth * 0.95;
     turtleY = 175;
 
-    turtle.style.left = turtleX + "px";
-    turtle.style.top = turtleY + "px";
-
     updateTurtle();
 }
 
 window.addEventListener("load", initTurtlePosition);
 
-function updateTurtle(){
+function updateTurtle() {
 
     turtle.style.left = turtleX + "px";
     turtle.style.top = turtleY + "px";
-
     turtle.style.transform = `rotate(${turtleAngle}deg)`;
 }
 
-document.addEventListener("keydown",(e)=>{
+document.addEventListener("keydown", (e) => {
 
-    switch(e.key){
+    switch (e.key) {
 
         case "ArrowLeft":
-            turtleX -= turtleSpeed;
-            turtleAngle = 180;
+            turtleAngle -= turnSpeed;
             break;
 
         case "ArrowRight":
-            turtleX += turtleSpeed;
-            turtleAngle = 0;
+            turtleAngle += turnSpeed;
             break;
 
         case "ArrowUp":
-            turtleY -= turtleSpeed;
-            turtleAngle -= 90;
+
+            turtleX += Math.cos(turtleAngle * Math.PI / 180) * turtleSpeed;
+            turtleY += Math.sin(turtleAngle * Math.PI / 180) * turtleSpeed;
+
             break;
 
         case "ArrowDown":
-            turtleY += turtleSpeed;
-            turtleAngle += 90;
+
+            turtleX -= Math.cos(turtleAngle * Math.PI / 180) * turtleSpeed;
+            turtleY -= Math.sin(turtleAngle * Math.PI / 180) * turtleSpeed;
+
             break;
 
         default:
@@ -522,6 +519,8 @@ document.addEventListener("keydown",(e)=>{
 
     e.preventDefault();
     updateTurtle();
+
+});
 
 });
 // DATA
