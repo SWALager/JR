@@ -517,16 +517,27 @@ function updateTurtle(){
 function gameLoop(){
 
     // rotera medurs
-    if(keys.ArrowUp){
+   // Rotation
+if(keys.ArrowUp){
+
+    if(isReversing){
+        turtleAngle -= turnSpeed;  // inverterad när den backar
+    } else {
         turtleAngle += turnSpeed;
     }
 
+}
 
-    // rotera moturs
-    if(keys.ArrowDown){
+
+if(keys.ArrowDown){
+
+    if(isReversing){
+        turtleAngle += turnSpeed;  // inverterad när den backar
+    } else {
         turtleAngle -= turnSpeed;
     }
 
+}
 
     let rad = turtleAngle * Math.PI / 180;
 
