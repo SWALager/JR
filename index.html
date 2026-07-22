@@ -336,9 +336,10 @@ body.dark td div {
 </h2>
 
 <div style="margin-bottom:10px;">
-  <button onclick="toggleTheme()">🌙 Dark Mode</button>
-  <button id="toggleFormBtn">➕ Ny produkt</button>
-  <button id="exportBtn">💾 Exportera lager som JSON</button>
+<button onclick="toggleTheme()">🌙 Dark Mode</button>
+<button id="toggleFormBtn">➕ Ny produkt</button>
+<button id="exportBtn">💾 Exportera lager som JSON</button>
+<button onclick="restoreEaten()">♻️ Återställ</button>
 </div>
 
 <form id="productForm">
@@ -514,6 +515,39 @@ function updateTurtle(){
 // Upp = rotera medurs
 // Ner = rotera moturs
 
+  function turtleEat() {
+
+    const turtleRect = turtle.getBoundingClientRect();
+
+    document.querySelectorAll("h2, p, td div").forEach(el => {
+
+        if(el.classList.contains("eaten")) return;
+
+        const rect = el.getBoundingClientRect();
+
+        const hit =
+            turtleRect.left < rect.right &&
+            turtleRect.right > rect.left &&
+            turtleRect.top < rect.bottom &&
+            turtleRect.bottom > rect.top;
+
+        if(hit){
+
+            el.classList.add("eaten");
+
+            el.style.transition = "all 0.3s ease";
+            el.style.transform = "scale(0)";
+            el.style.opacity = "0";
+
+            setTimeout(() => {
+                el.style.visibility = "hidden";
+            }, 300);
+        }
+
+    });
+}
+
+  
 function gameLoop(){
 
     // rotera medurs
@@ -563,9 +597,11 @@ if(keys.ArrowRight){
 }
 
 
-    updateTurtle();
+ updateTurtle();
 
-    requestAnimationFrame(gameLoop);
+turtleEat();
+
+requestAnimationFrame(gameLoop);
 }
 
 
@@ -573,6 +609,22 @@ window.addEventListener("load", () => {
     initTurtle();
     gameLoop();
 });
+
+  //Någonstans bland mina funktioner
+  function restoreEaten(){
+
+    document.querySelectorAll(".eaten").forEach(el => {
+
+        el.classList.remove("eaten");
+
+        el.style.visibility = "";
+        el.style.opacity = "";
+        el.style.transform = "";
+        el.style.transition = "";
+
+    });
+
+}
 // DATA
 let products={}, editingKey=null, activeComment=null;
 
