@@ -455,7 +455,7 @@ const turtle = document.querySelector('.mobile-link');
 const startBtn = document.getElementById('startTurtle');
 
 let turtleX = 0;
-let turtleY = 175;
+let turtleY = 165;
 
 let turtleAngle = 0; // pekar åt vänster från start
   let isReversing = false;
@@ -519,9 +519,10 @@ function updateTurtle(){
 
     const turtleRect = turtle.getBoundingClientRect();
 
-  document.querySelectorAll(
-    "table td, table th"
-).forEach(el => {
+document.querySelectorAll(
+    "table td, table th, table td div"
+)
+.forEach(el => {
 
         if(el.classList.contains("eaten")) return;
 
@@ -533,17 +534,14 @@ function updateTurtle(){
             turtleRect.top < rect.bottom &&
             turtleRect.bottom > rect.top;
 
-        if(hit){
+    if(hit){
 
-            el.classList.add("eaten");
+    el.classList.add("eaten");
 
-            el.style.transition = "all 0.3s ease";
-            el.style.transform = "scale(0)";
-            el.style.opacity = "0";
+    el.dataset.oldColor = getComputedStyle(el).color;
 
-            setTimeout(() => {
-              el.style.visibility = "hidden";
-            }, 300);
+    el.style.color = "transparent";
+}, 300);
         }
 
     });
