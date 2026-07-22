@@ -519,7 +519,9 @@ function updateTurtle(){
 
     const turtleRect = turtle.getBoundingClientRect();
 
-   document.querySelectorAll("h1, h3, h4, h5, h6, p, span, td, th, div").forEach(el => {
+  document.querySelectorAll(
+    "table td, table th"
+).forEach(el => {
 
         if(el.classList.contains("eaten")) return;
 
