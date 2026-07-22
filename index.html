@@ -515,14 +515,13 @@ function updateTurtle(){
 // Upp = rotera medurs
 // Ner = rotera moturs
 
-  function turtleEat() {
+ function turtleEat() {
 
     const turtleRect = turtle.getBoundingClientRect();
 
-document.querySelectorAll(
-    "table td, table th, table td div"
-)
-.forEach(el => {
+    document.querySelectorAll(
+        "table td, table th, table td div"
+    ).forEach(el => {
 
         if(el.classList.contains("eaten")) return;
 
@@ -534,14 +533,11 @@ document.querySelectorAll(
             turtleRect.top < rect.bottom &&
             turtleRect.bottom > rect.top;
 
-    if(hit){
+        if(hit){
 
-    el.classList.add("eaten");
+            el.classList.add("eaten");
+            el.style.color = "transparent";
 
-    el.dataset.oldColor = getComputedStyle(el).color;
-
-    el.style.color = "transparent";
-}, 300);
         }
 
     });
@@ -611,16 +607,12 @@ window.addEventListener("load", () => {
 });
 
   //Någonstans bland mina funktioner
-  function restoreEaten(){
+ function restoreEaten(){
 
     document.querySelectorAll(".eaten").forEach(el => {
 
         el.classList.remove("eaten");
-
-        el.style.visibility = "";
-        el.style.opacity = "";
-        el.style.transform = "";
-        el.style.transition = "";
+        el.style.color = "";
 
     });
 
