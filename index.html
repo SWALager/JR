@@ -586,7 +586,9 @@ function updateMario() {
     marioSprite.style.top = marioY + "px";
 
     marioSprite.style.transform =
-        `rotate(${marioAngle}deg)`;
+        marioFacingLeft
+            ? "scaleX(-1)"
+            : "scaleX(1)";
 }
 
 function turtleEat() {
@@ -694,13 +696,15 @@ function gameLoop() {
 
     if (marioMode) {
 
-        if (keys["a"] || keys["A"]) {
-            marioX -= moveSpeed;
-        }
+    if (keys["a"] || keys["A"]) {
+    marioX -= moveSpeed;
+    marioFacingLeft = true;
+}
 
-        if (keys["d"] || keys["D"]) {
-            marioX += moveSpeed;
-        }
+if (keys["d"] || keys["D"]) {
+    marioX += moveSpeed;
+    marioFacingLeft = false;
+}
 
         if (keys["w"] || keys["W"]) {
             marioY -= moveSpeed;
@@ -735,8 +739,8 @@ pipe.addEventListener("click", () => {
 
         marioSprite.style.display = "block";
 
-        marioX = 20;
-        marioY = 25;
+        marioX = 15;
+        marioY = 20;
 
         updateMario();
 
