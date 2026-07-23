@@ -740,14 +740,22 @@ pipe.addEventListener("click", () => {
 
         marioSprite.style.display = "block";
 
-        // exakt vid röret
-        marioX = 0;
-        marioY = 0;
+        // hämta storlekar
+        const pipeWidth = pipe.offsetWidth;
+        const marioWidth = marioSprite.offsetWidth;
+        const marioHeight = marioSprite.offsetHeight;
+
+        // centrera Mario över röret
+        marioX = (pipeWidth / 2) - (marioWidth / 2);
+
+        // stå precis ovanpå röret
+        marioY = -marioHeight + 5;
 
         updateMario();
 
         // börja nere i röret
-        marioSprite.style.top = "15px";
+        marioSprite.style.top =
+            (marioY + marioHeight) + "px";
 
         marioSprite.classList.add("mario-rise");
 
