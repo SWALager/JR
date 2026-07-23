@@ -581,8 +581,8 @@ function updateTurtle(){
 
     turtle.style.transform =
         isReversing
-        ? `rotate(${turtleAngle}deg) scaleX(1)`
-        : `rotate(${turtleAngle}deg) scaleX(-1)`;
+        ? `rotate(${turtleAngle}deg) scaleX(-1)`
+        : `rotate(${turtleAngle}deg) scaleX(1)`;
 }
 
 // ==========================
@@ -596,8 +596,8 @@ function updateMario(){
 
     marioSprite.style.transform =
         marioFacingLeft
-        ? "scaleX(-1)"
-        : "scaleX(1)";
+        ? "scaleX(1)"
+        : "scaleX(-1)";
 }
 
 // ==========================
