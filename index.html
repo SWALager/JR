@@ -318,6 +318,54 @@ body.dark td div {
     0 0 20px rgba(255, 245, 0, 0.6);
 }
 
+  /*Mario*/
+  .mario-pipe{
+  position:absolute;
+  top:-10px;
+  left:-10px;
+  width:70px;
+  cursor:pointer;
+  z-index:3000;
+}
+
+.pixel-mario{
+  position:absolute;
+  width:40px;
+  height:40px;
+  z-index:3001;
+  pointer-events:none;
+  image-rendering: pixelated;
+  display:none;
+}
+
+.pipe-shake{
+  animation: pipeShake 0.3s;
+}
+
+@keyframes pipeShake{
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-2px);}
+  50%{transform:translateX(2px);}
+  75%{transform:translateX(-2px);}
+  100%{transform:translateX(0);}
+}
+
+.mario-rise{
+  animation:marioRise 0.8s forwards;
+}
+
+@keyframes marioRise{
+  from{
+    transform:translateY(40px);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
+
 </style>
 </head>
 
@@ -354,6 +402,13 @@ body.dark td div {
 <input id="search" placeholder="🔍 Sök...">
 
 
+<div style="position:relative;">
+<img4 
+  id="marioPipe"
+  class="mario-pipe"
+  src="pipe.png"
+  alt="Mario-rg"
+  alt="Mario">
 <table>
 <thead>
 <tr>
@@ -369,6 +424,7 @@ body.dark td div {
 </thead>
 <tbody id="productList"></tbody>
 </table>
+  </div>
 </div>
 
 <!-- MODAL -->
@@ -450,6 +506,10 @@ toggleBtn.addEventListener("click", () => {
 // ==========================
 // SKÖLDPADDA PILTANGENTER
 // ==========================
+const marioSprite = document.getElementById("pixelMario");
+const pipe = document.getElementById("marioPipe");
+
+let marioMode = false;
 
 const turtle = document.querySelector('.mobile-link');
 const startBtn = document.getElementById('startTurtle');
@@ -506,7 +566,25 @@ function updateTurtle(){
             `rotate(${turtleAngle}deg) scaleX(1)`;
 
     }
+if(marioMode){
 
+    marioSprite.style.left = turtleX + "px";
+    marioSprite.style.top = turtleY + "px";
+
+    if(isReversing){
+
+        marioSprite.style.transform =
+            `rotate(${turtleAngle}deg) scaleX(-1)`;
+
+    }else{
+
+        marioSprite.style.transform =
+            `rotate(${turtleAngle}deg) scaleX(1)`;
+
+    }
+}
+
+  
 }
 
 
@@ -517,7 +595,10 @@ function updateTurtle(){
 
  function turtleEat() {
 
-    const turtleRect = turtle.getBoundingClientRect();
+    const actorRect =
+    marioMode
+    ? marioSprite.getBoundingClientRect()
+    : turtle.getBoundingClientRect();
 
     document.querySelectorAll(
         "table td, table th, table td div"
@@ -527,11 +608,11 @@ function updateTurtle(){
 
         const rect = el.getBoundingClientRect();
 
-        const hit =
-            turtleRect.left < rect.right &&
-            turtleRect.right > rect.left &&
-            turtleRect.top < rect.bottom &&
-            turtleRect.bottom > rect.top;
+     const hit =
+    actorRect.left < rect.right &&
+    actorRect.right > rect.left &&
+    actorRect.top < rect.bottom &&
+    actorRect.bottom > rect.top;
 
         if(hit){
 
@@ -948,6 +1029,39 @@ function updateFilterStyles(){
   statusHeader.classList.toggle("filter-active", filterOutOfStockActive);
 }
 document.getElementById("search").addEventListener("input",render);
+
+pipe.addEventListener("click", () => {
+
+    if(marioMode) return;
+
+    marioMode = true;
+
+    pipe.classList.add("pipe-shake");
+
+    setTimeout(() => {
+
+        turtle.style.display = "none";
+
+        marioSprite.style.display = "block";
+
+        marioSprite.style.left = "20px";
+        marioSprite.style.top = "25px";
+
+        marioSprite.classList.add("mario-rise");
+
+        setTimeout(() => {
+
+            marioSprite.classList.remove("mario-rise");
+
+            marioSprite.style.left = turtleX + "px";
+            marioSprite.style.top = turtleY + "px";
+
+        }, 800);
+
+    }, 250);
+
+});
+  
 </script>
 </body>
 </html>
