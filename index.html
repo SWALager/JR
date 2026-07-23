@@ -516,10 +516,9 @@ toggleBtn.addEventListener("click", () => {
 const marioSprite = document.getElementById("pixelMario");
 const pipe = document.getElementById("marioPipe");
 
-let marioMode = false;
-
 const turtle = document.querySelector(".mobile-link");
-const startBtn = document.getElementById("startTurtle");
+
+let marioMode = false;
 
 // SKÖLDPADDA
 let turtleX = 0;
@@ -528,23 +527,27 @@ let turtleAngle = 0;
 let isReversing = false;
 
 // MARIO
-let marioX = 20;
-let marioY = 25;
-let marioAngle = 0;
+let marioX = -8;
+let marioY = -15;
+let marioFacingLeft = false;
 
 const moveSpeed = 2;
 const turnSpeed = 2;
 
 let keys = {};
 
+// ==========================
+// INPUT
+// ==========================
+
 window.addEventListener("keydown", e => {
 
     keys[e.key] = true;
 
     if (
-        ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]
+        ["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"]
         .includes(e.key)
-    ) {
+    ){
         e.preventDefault();
     }
 });
@@ -553,56 +556,67 @@ window.addEventListener("keyup", e => {
     keys[e.key] = false;
 });
 
-function initTurtle() {
+// ==========================
+// INIT
+// ==========================
 
-    const container = document.querySelector(".container");
+function initTurtle(){
+
+    const container =
+        document.querySelector(".container");
 
     turtleX = container.offsetWidth * 0.95;
 
     updateTurtle();
 }
 
-function updateTurtle() {
+// ==========================
+// UPPDATERA SKÖLDPADDA
+// ==========================
+
+function updateTurtle(){
 
     turtle.style.left = turtleX + "px";
     turtle.style.top = turtleY + "px";
 
-    if (isReversing) {
-
-        turtle.style.transform =
-            `rotate(${turtleAngle}deg) scaleX(-1)`;
-
-    } else {
-
-        turtle.style.transform =
-            `rotate(${turtleAngle}deg) scaleX(1)`;
-
-    }
+    turtle.style.transform =
+        isReversing
+        ? `rotate(${turtleAngle}deg) scaleX(-1)`
+        : `rotate(${turtleAngle}deg) scaleX(1)`;
 }
 
-function updateMario() {
+// ==========================
+// UPPDATERA MARIO
+// ==========================
+
+function updateMario(){
 
     marioSprite.style.left = marioX + "px";
     marioSprite.style.top = marioY + "px";
 
     marioSprite.style.transform =
         marioFacingLeft
-            ? "scaleX(-1)"
-            : "scaleX(1)";
+        ? "scaleX(-1)"
+        : "scaleX(1)";
 }
 
-function turtleEat() {
+// ==========================
+// COLLISION
+// ==========================
+
+function eatWith(actor){
 
     const actorRect =
-        turtle.getBoundingClientRect();
+        actor.getBoundingClientRect();
 
     document.querySelectorAll(
         "table td, table th, table td div"
     ).forEach(el => {
 
-        if (el.classList.contains("eaten")) return;
+        if(el.classList.contains("eaten")) return;
 
-        const rect = el.getBoundingClientRect();
+        const rect =
+            el.getBoundingClientRect();
 
         const hit =
             actorRect.left < rect.right &&
@@ -610,7 +624,7 @@ function turtleEat() {
             actorRect.top < rect.bottom &&
             actorRect.bottom > rect.top;
 
-        if (hit) {
+        if(hit){
 
             el.classList.add("eaten");
             el.style.color = "transparent";
@@ -618,60 +632,36 @@ function turtleEat() {
     });
 }
 
-function marioEat() {
+// ==========================
+// GAME LOOP
+// ==========================
 
-    const marioRect =
-        marioSprite.getBoundingClientRect();
+function gameLoop(){
 
-    document.querySelectorAll(
-        "table td, table th, table td div"
-    ).forEach(el => {
+    // ===== SKÖLDPADDA =====
 
-        if (el.classList.contains("eaten")) return;
+    if(keys.ArrowUp){
 
-        const rect = el.getBoundingClientRect();
-
-        const hit =
-            marioRect.left < rect.right &&
-            marioRect.right > rect.left &&
-            marioRect.top < rect.bottom &&
-            marioRect.bottom > rect.top;
-
-        if (hit) {
-
-            el.classList.add("eaten");
-            el.style.color = "transparent";
-        }
-    });
-}
-
-function gameLoop() {
-
-    // ==================
-    // SKÖLDPADDA
-    // ==================
-
-    if (keys.ArrowUp) {
-
-        if (isReversing) {
+        if(isReversing){
             turtleAngle -= turnSpeed;
-        } else {
+        }else{
             turtleAngle += turnSpeed;
         }
     }
 
-    if (keys.ArrowDown) {
+    if(keys.ArrowDown){
 
-        if (isReversing) {
+        if(isReversing){
             turtleAngle += turnSpeed;
-        } else {
+        }else{
             turtleAngle -= turnSpeed;
         }
     }
 
-    let rad = turtleAngle * Math.PI / 180;
+    let rad =
+        turtleAngle * Math.PI / 180;
 
-    if (keys.ArrowLeft) {
+    if(keys.ArrowLeft){
 
         isReversing = false;
 
@@ -679,7 +669,7 @@ function gameLoop() {
         turtleY -= Math.sin(rad) * moveSpeed;
     }
 
-    if (keys.ArrowRight) {
+    if(keys.ArrowRight){
 
         isReversing = true;
 
@@ -688,48 +678,59 @@ function gameLoop() {
     }
 
     updateTurtle();
-    turtleEat();
 
-    // ==================
-    // MARIO
-    // ==================
+    eatWith(turtle);
 
-    if (marioMode) {
+    // ===== MARIO =====
 
-    if (keys["a"] || keys["A"]) {
-    marioX -= moveSpeed;
-    marioFacingLeft = true;
-}
+    if(marioMode){
 
-if (keys["d"] || keys["D"]) {
-    marioX += moveSpeed;
-    marioFacingLeft = false;
-}
+        if(keys["a"] || keys["A"]){
 
-        if (keys["w"] || keys["W"]) {
+            marioX -= moveSpeed;
+            marioFacingLeft = true;
+        }
+
+        if(keys["d"] || keys["D"]){
+
+            marioX += moveSpeed;
+            marioFacingLeft = false;
+        }
+
+        if(keys["w"] || keys["W"]){
             marioY -= moveSpeed;
         }
 
-        if (keys["s"] || keys["S"]) {
+        if(keys["s"] || keys["S"]){
             marioY += moveSpeed;
         }
 
         updateMario();
-        marioEat();
+
+        eatWith(marioSprite);
     }
 
     requestAnimationFrame(gameLoop);
 }
 
+// ==========================
+// START
+// ==========================
+
 window.addEventListener("load", () => {
 
     initTurtle();
+
     gameLoop();
 });
 
+// ==========================
+// MARIO PIPE
+// ==========================
+
 pipe.addEventListener("click", () => {
 
-    if (marioMode) return;
+    if(marioMode) return;
 
     marioMode = true;
 
@@ -739,10 +740,14 @@ pipe.addEventListener("click", () => {
 
         marioSprite.style.display = "block";
 
-        marioX = 15;
-        marioY = 20;
+        // exakt vid röret
+        marioX = -8;
+        marioY = -15;
 
         updateMario();
+
+        // börja nere i röret
+        marioSprite.style.top = "15px";
 
         marioSprite.classList.add("mario-rise");
 
@@ -750,9 +755,13 @@ pipe.addEventListener("click", () => {
 
             marioSprite.classList.remove("mario-rise");
 
+            marioSprite.style.top =
+                marioY + "px";
+
         }, 800);
 
     }, 250);
+
 });
 
   //Någonstans bland mina funktioner
